@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var Users = require('../models/user');
+var User = require('../models/user');
 var Verify    = require('./verify');
 
 router.get('/', Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
-    Users.find({}, function(err, users) {
+    User.find({}, function(err, users) {
         if (err) throw err;
         res.json(users);
     });
