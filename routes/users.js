@@ -1,11 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var User = require('../models/user');
+var Users = require('../models/user');
 var Verify    = require('./verify');
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
+    Users.find({}, function(err, users) {
+        if (err) throw err;
+        res.json(users);
+    });
 });
 
 router.post('/register', function(req, res) {
