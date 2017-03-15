@@ -90,11 +90,26 @@ router.route('/:id')
             
             var index = favorite.dishes.indexOf(req.params.id);
             favorite.dishes.splice(index, 1);
-            favorite.save(function (err, favorite) {
-                if (err) throw err;
-                console.log('deleted favorite ' + req.params.id);
-                res.json(favorite);
-            });
+            
+            if (favorite.dishes.length == 0) {
+                
+                // no more favorites left for this user
+                // delete the entire record
+                Favorites.remove({'postedBy': postedBy}, function(err, resp) {
+                    if (err) throw err;
+                    console.log('No more favorites. Entire record deleted!');
+                    res.json(favorite);
+                });
+                
+            } else {
+                
+                // Save the favorites record.
+                favorite.save(function (err, favorite) {
+                    if (err) throw err;
+                    console.log('deleted favorite ' + req.params.id);
+                    res.json(favorite);
+                });
+            }
         }
     });
 });
